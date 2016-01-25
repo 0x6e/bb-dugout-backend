@@ -23,6 +23,37 @@ app.use(passport.initialize());
 app.get('/', function(req, res) {
   res.send('Hello! The API is at http://localhost:' + port + '/api');
 });
+
+// connect to database
+mongoose.connect(config.database);
+ 
+// pass passport for configuration
+require('./config/passport')(passport);
+ 
+// bundle our routes
+var apiRoutes = express.Router();
+ 
+// create a new user account (POST http://localhost:8080/api/signup)
+apiRoutes.post('/signup', function(req, res) {
+  if (!req.body.name || !req.body.password) {
+    res.json({success: false, msg: 'Please pass a Coach name and password.'});
+  } else {
+    var newCoach = new Coach({
+      name: req.body.name,
+      password: req.body.password
+    });
+    // save the user
+    newCoach.save(function(err) {
+      if (err) {
+        return res.json({success: false, msg: 'This Coach already exists.'});
+      }
+      res.json({success: true, msg: 'Successfully created a new Coach.'});
+    });
+  }
+});
+ 
+// connect the api routes under /api/*
+app.use('/api', apiRoutes);
  
 // Start the server
 app.listen(port);
