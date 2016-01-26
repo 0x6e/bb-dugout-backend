@@ -5,7 +5,7 @@ var morgan      = require('morgan');
 var mongoose    = require('mongoose');
 var passport	= require('passport');
 var config      = require('./config/database'); // get db config file
-var User        = require('./app/models/coach'); // get the mongoose model
+var Coach        = require('./app/models/coach'); // get the mongoose model
 var port        = process.env.PORT || 8080;
 var jwt         = require('jwt-simple');
  
@@ -50,6 +50,31 @@ apiRoutes.post('/signup', function(req, res) {
       res.json({success: true, msg: 'Successfully created a new Coach.'});
     });
   }
+});
+
+// route to authenticate a coach (POST http://localhost:8080/api/authenticate)
+apiRoutes.post('/authenticate', function(req, res) {
+  Coach.findOne({
+    name: req.body.name
+  }, function(err, coach) {
+    if (err) throw err;
+ 
+    if (!coach) {
+      res.send({success: false, msg: 'Authentication failed. Coach not found.'});
+    } else {
+      // check if password matches
+      coach.comparePassword(req.body.password, function (err, isMatch) {
+        if (isMatch && !err) {
+          // if coach is found and password is right create a token
+          var token = jwt.encode(coach, config.secret);
+          // return the information including token as JSON
+          res.json({success: true, token: 'JWT ' + token});
+        } else {
+          res.send({success: false, msg: 'Authentication failed. Wrong password.'});
+        }
+      });
+    }
+  });
 });
  
 // connect the api routes under /api/*
