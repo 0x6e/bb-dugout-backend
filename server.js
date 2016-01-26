@@ -5,7 +5,7 @@ var morgan      = require('morgan');
 var mongoose    = require('mongoose');
 var passport	= require('passport');
 var config      = require('./config/database'); // get db config file
-var User        = require('./app/models/coach'); // get the mongoose model
+var Coach       = require('./app/models/coach'); // get the mongoose model
 var port        = process.env.PORT || 8080;
 var jwt         = require('jwt-simple');
  
