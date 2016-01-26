@@ -1,0 +1,9 @@
+// database.js should contain the following details:
+
+module.exports = {
+  // Mongodb database connection URI
+  'database': 'mongodb://localhost/bb-dugout-db',
+  
+  // The secret (symmetric) or PEM-encoded public key (asymmetric) for verifying the JWT token's signature
+  'secret': 'aSecret'
+};
