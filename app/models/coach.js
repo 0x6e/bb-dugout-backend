@@ -3,6 +3,11 @@ var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt');
 
 var CoachSchema = new Schema({
+  uniqueName: {
+    type: String,
+    unique: true,
+    required: true
+  },
   name: {
         type: String,
         unique: true,
@@ -13,7 +18,7 @@ var CoachSchema = new Schema({
         required: true
     }
 });
- 
+
 CoachSchema.pre('save', function (next) {
     var user = this;
     if (this.isModified('password') || this.isNew) {
@@ -33,7 +38,7 @@ CoachSchema.pre('save', function (next) {
         return next();
     }
 });
- 
+
 CoachSchema.methods.comparePassword = function (passw, cb) {
     bcrypt.compare(passw, this.password, function (err, isMatch) {
         if (err) {
@@ -42,5 +47,5 @@ CoachSchema.methods.comparePassword = function (passw, cb) {
         cb(null, isMatch);
     });
 };
- 
+
 module.exports = mongoose.model('Coach', CoachSchema);

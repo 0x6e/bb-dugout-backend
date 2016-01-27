@@ -8,17 +8,17 @@ var config      = require('./config/database'); // get db config file
 var Coach       = require('./app/models/coach'); // get the mongoose model
 var port        = process.env.PORT || 8080;
 var jwt         = require('jwt-simple');
- 
+
 // get our request parameters
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
- 
+
 // log to console
 app.use(morgan('dev'));
- 
+
 // Use the passport package in our application
 app.use(passport.initialize());
- 
+
 // demo Route (GET http://localhost:8080)
 app.get('/', function(req, res) {
   res.send('Hello! The API is at http://localhost:' + port + '/api');
@@ -26,19 +26,20 @@ app.get('/', function(req, res) {
 
 // connect to database
 mongoose.connect(config.database);
- 
+
 // pass passport for configuration
 require('./config/passport')(passport);
- 
+
 // bundle our routes
 var apiRoutes = express.Router();
- 
+
 // create a new user account (POST http://localhost:8080/api/signup)
 apiRoutes.post('/signup', function(req, res) {
   if (!req.body.name || !req.body.password) {
     res.json({success: false, msg: 'Please pass a Coach name and password.'});
   } else {
     var newCoach = new Coach({
+      uniqueName: req.body.name.toUpperCase(),
       name: req.body.name,
       password: req.body.password
     });
@@ -58,7 +59,7 @@ apiRoutes.post('/authenticate', function(req, res) {
     name: req.body.name
   }, function(err, coach) {
     if (err) throw err;
- 
+
     if (!coach) {
       res.send({success: false, msg: 'Authentication failed. Coach not found.'});
     } else {
@@ -76,11 +77,10 @@ apiRoutes.post('/authenticate', function(req, res) {
     }
   });
 });
- 
+
 // connect the api routes under /api/*
 app.use('/api', apiRoutes);
- 
+
 // Start the server
 app.listen(port);
 console.log('There will be dragons: http://localhost:' + port);
-
