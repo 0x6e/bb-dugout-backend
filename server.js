@@ -51,6 +51,31 @@ apiRoutes.post('/signup', function(req, res) {
     });
   }
 });
+
+// route to authenticate a coach (POST http://localhost:8080/api/authenticate)
+apiRoutes.post('/authenticate', function(req, res) {
+  Coach.findOne({
+    name: req.body.name
+  }, function(err, coach) {
+    if (err) throw err;
+ 
+    if (!coach) {
+      res.send({success: false, msg: 'Authentication failed. Coach not found.'});
+    } else {
+      // check if password matches
+      coach.comparePassword(req.body.password, function (err, isMatch) {
+        if (isMatch && !err) {
+          // if coach is found and password is right create a token
+          var token = jwt.encode(coach, config.secret);
+          // return the information including token as JSON
+          res.json({success: true, token: 'JWT ' + token});
+        } else {
+          res.send({success: false, msg: 'Authentication failed. Wrong password.'});
+        }
+      });
+    }
+  });
+});
  
 // connect the api routes under /api/*
 app.use('/api', apiRoutes);
