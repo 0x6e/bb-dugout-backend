@@ -1,5 +1,10 @@
 {
+  "version": "0.0.0",
+  "private": true,
   "name": "bb-dugout-backend",
+  "description": "A REST API for bb-dugout",
+  "repository": "https://github.com/0x6e/bb-dugout-backend",
+  "license": "UNLICENSED",
   "main": "server.js",
   "dependencies": {
     "bcrypt": "^0.8.5",
@@ -10,5 +15,9 @@
     "morgan": "~1.5.0",
     "passport": "^0.3.0",
     "passport-jwt": "^1.2.1"
+  },
+  "scripts": {
+    "prestart": "npm install",
+    "start": "node server.js"
   }
 }
