@@ -19,5 +19,10 @@
   "scripts": {
     "prestart": "npm install",
     "start": "node server.js"
+  },
+  "devDependencies": {
+    "mocha": "^2.4.3",
+    "should": "^8.2.1",
+    "supertest": "^1.1.0"
   }
 }
