@@ -89,9 +89,9 @@ describe("Dugout authentication API", function() {
       server.post("/api/authenticate")
       .send({})
       .expect("Content-type", /json/)
-      .expect(200)
+      .expect(401)
       .end( function(error, result) {
-        result.status.should.equal(200);
+        result.status.should.equal(401);
         result.body.success.should.equal(false);
         done();
       });
@@ -103,9 +103,9 @@ describe("Dugout authentication API", function() {
       server.post("/api/authenticate")
       .send({name: "notCoach", password: "iamnuffle"})
       .expect("Content-type", /json/)
-      .expect(200)
+      .expect(401)
       .end( function(error, result) {
-        result.status.should.equal(200);
+        result.status.should.equal(401);
         result.body.success.should.equal(false);
         done();
       });
@@ -131,9 +131,9 @@ describe("Dugout authentication API", function() {
       server.post("/api/authenticate")
       .send({name: "Coach", password: "notmypassword"})
       .expect("Content-type", /json/)
-      .expect(200)
+      .expect(401)
       .end( function(error, result) {
-        result.status.should.equal(200);
+        result.status.should.equal(401);
         result.body.success.should.equal(false);
         done();
       });

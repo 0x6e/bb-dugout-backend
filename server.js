@@ -19,6 +19,13 @@ app.use(morgan('dev'));
 // Use the passport package in our application
 app.use(passport.initialize());
 
+// Enable CORS
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 // demo Route (GET http://localhost:8080)
 app.get('/', function(req, res) {
   res.send('Hello! The API is at http://localhost:' + port + '/api');
@@ -61,7 +68,7 @@ apiRoutes.post('/authenticate', function(req, res) {
     if (err) throw err;
 
     if (!coach) {
-      res.send({success: false, msg: 'Authentication failed. Coach not found.'});
+      res.status(401).send({success: false, msg: 'Authentication failed. Coach not found.'});
     } else {
       // check if password matches
       coach.comparePassword(req.body.password, function (err, isMatch) {
@@ -71,7 +78,7 @@ apiRoutes.post('/authenticate', function(req, res) {
           // return the information including token as JSON
           res.json({success: true, token: 'JWT ' + token});
         } else {
-          res.send({success: false, msg: 'Authentication failed. Wrong password.'});
+          res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
         }
       });
     }
