@@ -15,9 +15,9 @@ describe("Dugout authentication API", function() {
       server.post("/api/signup")
       .send({name: "", password: "iamnuffle"})
       .expect("Content-type", /json/)
-      .expect(200)
+      .expect(409)
       .end( function(error, result) {
-        result.status.should.equal(200);
+        result.status.should.equal(409);
         result.body.success.should.equal(false);
         done();
       });
@@ -29,9 +29,9 @@ describe("Dugout authentication API", function() {
       server.post("/api/signup")
       .send({name: "emptyPassword", password: ""})
       .expect("Content-type", /json/)
-      .expect(200)
+      .expect(409)
       .end( function(error, result) {
-        result.status.should.equal(200);
+        result.status.should.equal(409);
         result.body.success.should.equal(false);
         done();
       });
@@ -43,9 +43,9 @@ describe("Dugout authentication API", function() {
       server.post("/api/signup")
       .send({name: "", password: ""})
       .expect("Content-type", /json/)
-      .expect(200)
+      .expect(409)
       .end( function(error, result) {
-        result.status.should.equal(200);
+        result.status.should.equal(409);
         result.body.success.should.equal(false);
         done();
       });
@@ -57,9 +57,9 @@ describe("Dugout authentication API", function() {
       server.post("/api/signup")
       .send({name: "Coach", password: "iamnuffle"})
       .expect("Content-type", /json/)
-      .expect(200)
+      .expect(409)
       .end( function(error, result) {
-        result.status.should.equal(200);
+        result.status.should.equal(409);
         result.body.success.should.equal(false);
         done();
       });
@@ -71,9 +71,9 @@ describe("Dugout authentication API", function() {
       server.post("/api/signup")
       .send({name: "coach", password: "iamnuffle"})
       .expect("Content-type", /json/)
-      .expect(200)
+      .expect(409)
       .end( function(error, result) {
-        result.status.should.equal(200);
+        result.status.should.equal(409);
         result.body.success.should.equal(false);
         done();
       });

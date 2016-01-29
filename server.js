@@ -43,7 +43,7 @@ var apiRoutes = express.Router();
 // create a new user account (POST http://localhost:8080/api/signup)
 apiRoutes.post('/signup', function(req, res) {
   if (!req.body.name || !req.body.password) {
-    res.json({success: false, msg: 'Please pass a Coach name and password.'});
+    res.status(409).json({success: false, msg: 'Please pass a Coach name and password.'});
   } else {
     var newCoach = new Coach({
       uniqueName: req.body.name.toUpperCase(),
@@ -53,9 +53,9 @@ apiRoutes.post('/signup', function(req, res) {
     // save the user
     newCoach.save(function(err) {
       if (err) {
-        return res.json({success: false, msg: 'This Coach already exists.'});
+        return res.status(409).json({success: false, msg: 'This Coach already exists.'});
       }
-      res.json({success: true, msg: 'Successfully created a new Coach.'});
+      res.status(201).json({success: true, msg: 'Successfully created a new Coach.'});
     });
   }
 });
