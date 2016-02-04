@@ -7,10 +7,10 @@ var server = supertest.agent('http://localhost:8080');
 
 
 describe("Dugout authentication API", function() {
+  // Mongolab might take a while to respond, so set a high timeout
+  this.timeout(30000);
 
   describe("Registration:", function() {
-    // Mongolab might take a while to respond, so set a high timeout
-    this.timeout(30000);
 
     it("should NOT register an empty username", function(done) {
 
@@ -156,6 +156,43 @@ describe("Dugout authentication API", function() {
 
     });
 
+  });
+
+  describe("Deleting Coaches", function() {
+
+    it("should NOT delete a Coach if they are not authenticated", function(done) {
+
+      server.delete("/api/coach")
+      .send({token: ""})
+      .expect("Content-Type", /json/)
+      .expect(401)
+      .end( function(error, result) {
+        result.status.should.equal(401);
+        done();
+      });
+
+    });
+
+    it("should delete a properly authenticated coach", function(done) {
+
+      server.post("/api/authenticate")
+      .send({name: "SignupTestCoach", password: "testing"})
+      .expect("Content-type", /json/)
+      .expect(200)
+      .end( function(error, result) {
+        result.status.should.equal(200);
+
+          server.delete("/api/coach")
+          .set("Authorization", result.body.token)
+          .expect("Content-Type", /json/)
+          .expect(200)
+          .end( function(error, result) {
+            result.status.should.equal(200);
+            done();
+          });
+      });
+
+    });
   });
 
 });

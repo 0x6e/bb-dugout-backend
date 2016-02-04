@@ -85,6 +85,33 @@ apiRoutes.post('/authenticate', function(req, res) {
   });
 });
 
+// delete an authenticated user (DELETE http://localhost:8080/api/coach)
+apiRoutes.delete('/coach', passport.authenticate('jwt', {session: false}),function(req, res) {
+  var token = getToken(req.headers);
+  if (token) {
+    var decodedCoach = jwt.decode(token, config.secret);
+    Coach.remove({uniqueName: decodedCoach.uniqueName}, function(err) {
+      if (err) {
+        return res.status(401).send({success: false, msg: 'Failed to delete coach.'});
+      }
+        return res.status(200).send({success: true, msg: 'Coach deleted.'});
+    });
+  } else {
+      return res.status(401).send({success: false, msg: 'Authentication failed.'});
+  }
+});
+
+getToken = function(headers) {
+  if (headers && headers.authorization) {
+    var parted = headers.authorization.split(' ');
+    if (parted.length === 2) {
+      return parted[1];
+    }
+  }
+
+  return null;
+}
+
 // connect the api routes under /api/*
 app.use('/api', apiRoutes);
 

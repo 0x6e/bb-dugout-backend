@@ -26,7 +26,7 @@ CoachSchema
     if (error)
       return next(error);
 
-    if (coach != null)
+    if (coach !== null)
       return next(new Error("Coach already exists!"));
 
     next();
