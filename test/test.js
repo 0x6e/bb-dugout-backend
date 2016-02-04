@@ -9,6 +9,8 @@ var server = supertest.agent('http://localhost:8080');
 describe("Dugout authentication API", function() {
 
   describe("Registration:", function() {
+    // Mongolab might take a while to respond, so set a high timeout
+    this.timeout(30000);
 
     it("should NOT register an empty username", function(done) {
 
@@ -52,10 +54,24 @@ describe("Dugout authentication API", function() {
 
     });
 
+    it("should register a new user with corret details", function(done) {
+
+      server.post("/api/signup")
+      .send({name: "SignupTestCoach", password: "testing"})
+      .expect("Content-Type", /json/)
+      .expect(201)
+      .end( function(error, result) {
+        result.status.should.equal(201);
+        result.body.success.should.equal(true);
+        done();
+      });
+
+    });
+
     it("should NOT register an exact duplicate username", function(done) {
 
       server.post("/api/signup")
-      .send({name: "Coach", password: "iamnuffle"})
+      .send({name: "SignupTestCoach", password: "testing"})
       .expect("Content-type", /json/)
       .expect(409)
       .end( function(error, result) {
@@ -69,7 +85,7 @@ describe("Dugout authentication API", function() {
     it("should NOT register an username that only differs by case", function(done) {
 
       server.post("/api/signup")
-      .send({name: "coach", password: "iamnuffle"})
+      .send({name: "SignupTESTCoach", password: "testing"})
       .expect("Content-type", /json/)
       .expect(409)
       .end( function(error, result) {

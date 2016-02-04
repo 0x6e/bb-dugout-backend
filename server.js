@@ -51,7 +51,7 @@ apiRoutes.post('/signup', function(req, res) {
       password: req.body.password
     });
     // save the user
-    newCoach.save(function(err) {
+    newCoach.save( function(err) {
       if (err) {
         return res.status(409).json({success: false, msg: 'This Coach already exists.'});
       }
